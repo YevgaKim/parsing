@@ -34,20 +34,32 @@ def get_data(url):
     for tr in all_students:
         td = tr.find_all('td')
         row = [tr.text.strip() for tr in td if tr.text.strip()]
+        if not 'class=""' in str(tr):
+            row.append("Да")
         if row:
             res.append(row)
+        
+    
     count=0
-    gr=res[0][5]
+    try:
+        gr=res[0][5]
+    except:
+        print("#"*20)
+        print("Список пуст")
+        print("#"*20)
+        return None
     for item in res:
         count+=1
         print(f"Операция номер {count}, осталось {len(res)-count}")
-        time.sleep(1)
+        time.sleep(0.5)
+        
         list_students.append(
             {
                 "Место":item[0],
                 "Имя": item[1],
                 "Баллы":item[2],
-                "Акад.баллы":item[3]
+                "Акад.баллы":item[3],
+                "Стипендия" : "Да" if "Да" in item else "Нет"
             }
         )
     with open(f"scholarship ranking_gr_{gr}.json","w",encoding="utf-8") as file:
